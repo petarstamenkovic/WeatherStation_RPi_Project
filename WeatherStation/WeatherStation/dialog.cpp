@@ -14,6 +14,8 @@
 #define MAXT 85 // More than enough, we leave additional space for eventual checking
 
 int dht_dat[5] = {0,0,0,0,0};
+int fd,light_value;
+
 
 // Initialzing the Dialog - constructor
 Dialog::Dialog(QWidget *parent)
@@ -34,6 +36,7 @@ Dialog::Dialog(QWidget *parent)
 
     wiringPiSetup();
 
+    fd = wiringPiI2CSetup(0x48); // Check the address for my case
     // Connecting the buttons to the timer functions
     connect(ui->temp_hum_button,&QPushButton::clicked,this,&Dialog::start_temperature_humidity_timer);
     connect(ui->rain_button,&QPushButton::clicked,this,&Dialog::start_rain_detection_timer);
@@ -51,8 +54,6 @@ void Dialog ::temperature_humidity_read()
     uint8_t counter = 0;
     uint8_t j = 0;
     uint8_t i;
-    QString test1 = "Tu sam";
-    QString test2 = "Radim";
 
     dht_dat[0] = dht_dat[1] = dht_dat[2] = dht_dat[3] = dht_dat[4] = 0;
 
@@ -62,6 +63,8 @@ void Dialog ::temperature_humidity_read()
     digitalWrite(DHTPIN,LOW);
     delay(18);
     //Prepare to read after 18ms
+    digitalWrite(DHTPIN,HIGH);
+    delayMicroseconds(40);
     pinMode(DHTPIN,INPUT);
 
     for(i = 0 ; i < MAXT ; i++)
@@ -70,22 +73,25 @@ void Dialog ::temperature_humidity_read()
         while(digitalRead(DHTPIN) == last_state)
         {
             counter++;
+            delayMicroseconds(1);
             if(counter == 255)
             {
                 break;
             }
         }
         last_state = digitalRead(DHTPIN);
+
         if(counter == 255)
             break;
 
-        dht_dat[j/8] <<= 1;
-        if(counter > 16)
+        if((i >= 4) && (i%2 == 0))
         {
-            dht_dat[j/8] |= 1;
+            dht_dat[j/8] <<= 1;
+            if(counter > 16)
+                dht_dat[j/8] |= 1;
+
             j++;
         }
-
     }
     // Checking the check-sum last byte and extracting data
     if((j>=40) && (dht_dat[4] = (dht_dat[0] + dht_dat[1] + dht_dat[2] + dht_dat[3]) & 0xFF))
@@ -132,16 +138,54 @@ void Dialog::rain_detection_read()
 
 void Dialog::light_detection_read()
 {
+    /*
     pinMode(PHOTORESISTOR_PIN,INPUT);
-    int analog_light_value = analogRead(PHOTOERESISTOR_PIN);
+    int analog_light_value = analogRead(PHOTORESISTOR_PIN);
     std::cout <<"Anlog value is : " << analog_light_value << std::endl;
+    */
 
+    // This part is done by using a YL-40 board that does AD conversion
+    // Declare the diodes as outputs and turn them off initially (these are on the DVK board tho)
+    pinMode(25,OUTPUT);
+    pinMode(26,OUTPUT);
+    pinMode(27,OUTPUT);
+
+    digitalWrite(25,LOW);
+    digitalWrite(26,LOW);
+    digitalWrite(27,LOW);
+
+    light_value = wiringPiI2CReadReg8(fd,0x00);
+
+    if(light_value < 84)
+    {
+        digitalWrite(25,HIGH);
+        digitalWrite(26,LOW);
+        digitalWrite(27,LOW);
+        std::cout<<"Baby its dark outside.."<<std::endl;
+        ui->label_6->setText("Baby its dark outside..");
+    }
+    else if(light_value < 168)
+    {
+        digitalWrite(25,LOW);
+        digitalWrite(26,HIGH);
+        digitalWrite(27,LOW);
+        std::cout<<"Baby its cloudy outside.."<<std::endl;
+        ui->label_6->setText("Baby its cloudy outside..");
+    }
+    else
+    {
+        digitalWrite(25,LOW);
+        digitalWrite(26,LOW);
+        digitalWrite(27,HIGH);
+        std::cout<<"Baby its sunny outside.."<<std::endl;
+        ui->label_6->setText("Baby its sunny outside..");
+    }
 }
 
 // Functions that start the timers
 void Dialog::start_temperature_humidity_timer()
 {
-    timer1->start(2000);
+    timer1->start(1000);
 }
 
 void Dialog::start_rain_detection_timer()
@@ -151,5 +195,5 @@ void Dialog::start_rain_detection_timer()
 
 void Dialog::start_light_detection_timer()
 {
-    timer3->start(2000);
+    timer3->start(1000);
 }
