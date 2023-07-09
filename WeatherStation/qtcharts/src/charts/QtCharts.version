@@ -1,0 +1,44 @@
+Qt_5_PRIVATE_API {
+    qt_private_api_tag*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/chartdataset_p.h */
+    *12ChartDataSet*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/axis/qabstractaxis_p.h */
+    *20QAbstractAxisPrivate*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/abstractdomain_p.h */
+    *14AbstractDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/logxlogydomain_p.h */
+    *14LogXLogYDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/logxlogypolardomain_p.h */
+    *19LogXLogYPolarDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/logxydomain_p.h */
+    *11LogXYDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/logxypolardomain_p.h */
+    *16LogXYPolarDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/polardomain_p.h */
+    *11PolarDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/xlogydomain_p.h */
+    *11XLogYDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/xlogypolardomain_p.h */
+    *16XLogYPolarDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/xydomain_p.h */
+    *8XYDomain*;
+    /* /home/petar/Desktop/RaspberryPiProject/WeatherStation/qtcharts/src/charts/domain/xypolardomain_p.h */
+    *13XYPolarDomain*;
+};
+Qt_5 { *; };
+Qt_5.0 {} Qt_5;
+Qt_5.1 {} Qt_5.0;
+Qt_5.2 {} Qt_5.1;
+Qt_5.3 {} Qt_5.2;
+Qt_5.4 {} Qt_5.3;
+Qt_5.5 {} Qt_5.4;
+Qt_5.6 {} Qt_5.5;
+Qt_5.7 {} Qt_5.6;
+Qt_5.8 {} Qt_5.7;
+Qt_5.9 {} Qt_5.8;
+Qt_5.10 {} Qt_5.9;
+Qt_5.11 {} Qt_5.10;
+Qt_5.12 {} Qt_5.11;
+Qt_5.13 {} Qt_5.12;
+Qt_5.14 {} Qt_5.13;
+Qt_5.15 { qt_version_tag; } Qt_5.14;

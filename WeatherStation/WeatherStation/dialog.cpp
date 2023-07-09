@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <QDebug>
+
 
 // Decleration of Pins for used sensors
 #define DHTPIN 7
@@ -15,7 +15,7 @@
 
 int dht_dat[5] = {0,0,0,0,0};
 int fd,light_value;
-
+int t = 0;
 
 // Initialzing the Dialog - constructor
 Dialog::Dialog(QWidget *parent)
@@ -41,6 +41,35 @@ Dialog::Dialog(QWidget *parent)
     connect(ui->temp_hum_button,&QPushButton::clicked,this,&Dialog::start_temperature_humidity_timer);
     connect(ui->rain_button,&QPushButton::clicked,this,&Dialog::start_rain_detection_timer);
     connect(ui->light_button,&QPushButton::clicked,this,&Dialog::start_light_detection_timer);
+
+    QChart *temp_hum_chart = new QChart();
+
+        temp_hum_chart -> legend() -> setVisible(true);
+        temp_hum_chart -> legend() -> setAlignment(Qt::AlignBottom);
+
+        // Temporal axis
+    QValueAxis *axisX = new QValueAxis;
+        axisX -> setMin(0);
+        temp_hum_chart -> addAxis(axisX,Qt::AlignBottom);
+
+        // Temperature axis
+    QValueAxis *axisYT = new QValueAxis;
+        axisYT -> setMin(0);
+        axisYT -> setMax(50);
+        temp_hum_chart -> addAxis(axisYT,Qt::AlignLeft);
+
+        // Humidity axis
+    QValueAxis *axisYH = new QValueAxis;
+        axisYH -> setMin(0);
+        axisYH -> setMax(100);
+        temp_hum_chart -> addAxis(axisYH,Qt::AlignRight);
+
+
+
+    QChartView *chartView = new QChartView(temp_hum_chart);
+        chartView -> setRenderHint(QPainter::Antialiasing);
+
+    ui -> verticalLayout -> addWidget(chartView);
 }
 
 Dialog::~Dialog()
@@ -54,7 +83,7 @@ void Dialog ::temperature_humidity_read()
     uint8_t counter = 0;
     uint8_t j = 0;
     uint8_t i;
-
+    t++;
     dht_dat[0] = dht_dat[1] = dht_dat[2] = dht_dat[3] = dht_dat[4] = 0;
 
     // DHT11 Communication requests
@@ -116,7 +145,20 @@ void Dialog ::temperature_humidity_read()
         ui-> label1->setText(QString::number(humidity));
         ui-> label2->setText(QString::number(temperature));
 
+        QLineSeries *temp = new QLineSeries;
+             temp -> setName("Tempearature");
+             temp -> append(t,temperature);
+        QLineSeries *hum  = new QLineSeries;
+             hum  -> setName("Humidity");
+             hum  -> append(t,humidity);
+
+        // Problem sto fali linije : temp_hum_chart -> addSeries(temp);     Problem sa opsezima!
+        //                           temp_hum_chart -> addSeries(hum);
+
+
     }
+
+
 
 }
 

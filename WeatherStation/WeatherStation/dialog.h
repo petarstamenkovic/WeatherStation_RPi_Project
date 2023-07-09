@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QDialog>
 #include <QString>
+#include <QtCharts>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
