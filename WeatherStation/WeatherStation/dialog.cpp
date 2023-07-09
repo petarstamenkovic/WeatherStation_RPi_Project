@@ -15,7 +15,7 @@
 
 int dht_dat[5] = {0,0,0,0,0};
 int fd,light_value;
-int t = 0;
+int t = 0; // variable for average values and qtcharts series
 
 // Initialzing the Dialog - constructor
 Dialog::Dialog(QWidget *parent)
@@ -64,8 +64,12 @@ Dialog::Dialog(QWidget *parent)
         axisYH -> setMax(100);
         temp_hum_chart -> addAxis(axisYH,Qt::AlignRight);
 
-
-
+    QLineSeries *temp = new QLineSeries;
+    QLineSeries *hum  = new QLineSeries;
+        temp_hum_chart -> addSeries(temp);
+        temp -> setName("Tempearature");
+        temp_hum_chart -> addSeries(hum);
+        hum -> setName("Humidity");
     QChartView *chartView = new QChartView(temp_hum_chart);
         chartView -> setRenderHint(QPainter::Antialiasing);
 
@@ -145,17 +149,8 @@ void Dialog ::temperature_humidity_read()
         ui-> label1->setText(QString::number(humidity));
         ui-> label2->setText(QString::number(temperature));
 
-        QLineSeries *temp = new QLineSeries;
-             temp -> setName("Tempearature");
-             temp -> append(t,temperature);
-        QLineSeries *hum  = new QLineSeries;
-             hum  -> setName("Humidity");
-             hum  -> append(t,humidity);
-
-        // Problem sto fali linije : temp_hum_chart -> addSeries(temp);     Problem sa opsezima!
-        //                           temp_hum_chart -> addSeries(hum);
-
-
+        temp -> append(t,temperature);
+        hum  -> append(t,humidity);
     }
 
 

@@ -30,5 +30,8 @@ private:
     void start_temperature_humidity_timer();
     void start_rain_detection_timer();
     void start_light_detection_timer();
+    QChart *temp_hum_chart;
+    QLineSeries *temp;
+    QLineSeries *hum;
 };
 #endif // DIALOG_H
