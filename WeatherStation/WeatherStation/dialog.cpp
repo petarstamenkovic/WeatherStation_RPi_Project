@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <QPixmap>
 
 
 // Decleration of Pins for used sensors
@@ -15,8 +16,9 @@
 
 int dht_dat[5] = {0,0,0,0,0};
 int fd,light_value;
-int t = 0; // variable for average values and qtcharts series
-
+float t = 0;   // variable for average values and qtcharts series
+float sum_t = 0; // variable for summary for temperature
+float sum_h = 0; // variable for summary for humidity
 // Initialzing the Dialog - constructor
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
@@ -28,8 +30,8 @@ Dialog::Dialog(QWidget *parent)
     timer1 = new QTimer(this);
     connect(timer1,&QTimer::timeout,this,&Dialog::temperature_humidity_read);
 
-    timer2 = new QTimer(this);
-    connect(timer2,&QTimer::timeout,this,&Dialog::rain_detection_read);
+   // timer2 = new QTimer(this);
+    //connect(timer2,&QTimer::timeout,this,&Dialog::rain_detection_read);
 
     timer3 = new QTimer(this);
     connect(timer3,&QTimer::timeout,this,&Dialog::light_detection_read);
@@ -39,7 +41,7 @@ Dialog::Dialog(QWidget *parent)
     fd = wiringPiI2CSetup(0x48); // Check the address for my case
     // Connecting the buttons to the timer functions
     connect(ui->temp_hum_button,&QPushButton::clicked,this,&Dialog::start_temperature_humidity_timer);
-    connect(ui->rain_button,&QPushButton::clicked,this,&Dialog::start_rain_detection_timer);
+    //connect(ui->rain_button,&QPushButton::clicked,this,&Dialog::start_rain_detection_timer);
     connect(ui->light_button,&QPushButton::clicked,this,&Dialog::start_light_detection_timer);
 
     QChart *temp_hum_chart = new QChart();
@@ -87,7 +89,7 @@ void Dialog ::temperature_humidity_read()
     uint8_t counter = 0;
     uint8_t j = 0;
     uint8_t i;
-    t++;
+
     dht_dat[0] = dht_dat[1] = dht_dat[2] = dht_dat[3] = dht_dat[4] = 0;
 
     // DHT11 Communication requests
@@ -146,9 +148,16 @@ void Dialog ::temperature_humidity_read()
             temperature = -temperature;
         }
 
+        t++;
+        sum_t = sum_t + temperature;
+        sum_h = sum_h + humidity;
+        float avg_t = sum_t/t;
+        float avg_h = sum_h/t;
+
         ui-> label1->setText(QString::number(humidity));
         ui-> label2->setText(QString::number(temperature));
-
+        ui-> average_temp_label -> setText(QString::number(avg_t));
+        ui-> average_humidity_label -> setText(QString::number(avg_h));
         temp -> append(t,temperature);
         hum  -> append(t,humidity);
     }
@@ -157,7 +166,7 @@ void Dialog ::temperature_humidity_read()
 
 }
 
-void Dialog::rain_detection_read()
+/*void Dialog::rain_detection_read()
 {
     pinMode(WATER_SENSOR,INPUT);
     int wat_value = digitalRead(WATER_SENSOR);
@@ -172,9 +181,22 @@ void Dialog::rain_detection_read()
         ui-> label_4->setText("No rain is detected");
     }
 }
-
+*/
 void Dialog::light_detection_read()
 {
+
+    pinMode(WATER_SENSOR,INPUT);
+    int wat_value = digitalRead(WATER_SENSOR);
+    if(wat_value == HIGH)
+    {
+        //std::cout << "Water detected" << std::endl;
+        ui-> label_4->setText("Rain is detected");
+    }
+    else
+    {
+        //std::cout << "No water detected" << std::endl;
+        ui-> label_4->setText("No rain is detected");
+    }
     /*
     pinMode(PHOTORESISTOR_PIN,INPUT);
     int analog_light_value = analogRead(PHOTORESISTOR_PIN);
@@ -183,39 +205,62 @@ void Dialog::light_detection_read()
 
     // This part is done by using a YL-40 board that does AD conversion
     // Declare the diodes as outputs and turn them off initially (these are on the DVK board tho)
-    pinMode(25,OUTPUT);
-    pinMode(26,OUTPUT);
-    pinMode(27,OUTPUT);
-
-    digitalWrite(25,LOW);
-    digitalWrite(26,LOW);
-    digitalWrite(27,LOW);
 
     light_value = wiringPiI2CReadReg8(fd,0x00);
 
-    if(light_value < 84)
+    if(light_value < 84 && wat_value == HIGH)
     {
-        digitalWrite(25,HIGH);
-        digitalWrite(26,LOW);
-        digitalWrite(27,LOW);
+        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_moon.png";
+        QPixmap pixmap(imagePath);
+        ui->forecast_label->setPixmap(pixmap);
+        ui->forecast_label->setScaledContents(true);
+        ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its dark outside.."<<std::endl;
         ui->label_6->setText("Baby its dark outside..");
     }
-    else if(light_value < 168)
+    else if(light_value < 84 && wat_value == LOW)
     {
-        digitalWrite(25,LOW);
-        digitalWrite(26,HIGH);
-        digitalWrite(27,LOW);
+        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_moon.png";
+        QPixmap pixmap(imagePath);
+        ui->forecast_label->setPixmap(pixmap);
+        ui->forecast_label->setScaledContents(true);
+        ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its cloudy outside.."<<std::endl;
         ui->label_6->setText("Baby its cloudy outside..");
     }
-    else
+    else if(light_value < 164 && wat_value == HIGH)
     {
-        digitalWrite(25,LOW);
-        digitalWrite(26,LOW);
-        digitalWrite(27,HIGH);
+        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_cloudy.png";
+        QPixmap pixmap(imagePath);
+        ui->forecast_label->setPixmap(pixmap);
+        ui->forecast_label->setScaledContents(true);
+        ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its sunny outside.."<<std::endl;
         ui->label_6->setText("Baby its sunny outside..");
+    }
+    else if(light_value < 164 && wat_value == LOW)
+    {
+        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_cloudy.png";
+        QPixmap pixmap(imagePath);
+        ui->forecast_label->setPixmap(pixmap);
+        ui->forecast_label->setScaledContents(true);
+        ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+    }
+    else if(light_value < 200 && wat_value == HIGH)
+    {
+        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_sunny.png";
+        QPixmap pixmap(imagePath);
+        ui->forecast_label->setPixmap(pixmap);
+        ui->forecast_label->setScaledContents(true);
+        ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+    }
+    else
+    {
+        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_sunny.png";
+        QPixmap pixmap(imagePath);
+        ui->forecast_label->setPixmap(pixmap);
+        ui->forecast_label->setScaledContents(true);
+        ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
     }
 }
 
@@ -225,11 +270,11 @@ void Dialog::start_temperature_humidity_timer()
     timer1->start(1000);
 }
 
-void Dialog::start_rain_detection_timer()
+/*void Dialog::start_rain_detection_timer()
 {
     timer2->start(2000);
 }
-
+*/
 void Dialog::start_light_detection_timer()
 {
     timer3->start(1000);

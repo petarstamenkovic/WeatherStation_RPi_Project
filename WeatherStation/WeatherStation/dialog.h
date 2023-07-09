@@ -25,10 +25,10 @@ private:
     QTimer *timer2;
     QTimer *timer3;
     void temperature_humidity_read();
-    void rain_detection_read();
+    //void rain_detection_read();
     void light_detection_read();
     void start_temperature_humidity_timer();
-    void start_rain_detection_timer();
+    //void start_rain_detection_timer();
     void start_light_detection_timer();
     QChart *temp_hum_chart;
     QLineSeries *temp;
