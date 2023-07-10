@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <QPixmap>
+#include <QMessageBox>
 
 
 // Decleration of Pins for used sensors
@@ -38,9 +39,11 @@ Dialog::Dialog(QWidget *parent)
     fd = wiringPiI2CSetup(0x48); // Check the address for my case
     // Connecting the buttons to the timer functions
     connect(ui->temp_hum_button,&QPushButton::clicked,this,&Dialog::start_temperature_humidity_timer);
-    connect(ui->light_button,&QPushButton::clicked,this,&Dialog::start_forecast_timer);
+    connect(ui->forecast_button,&QPushButton::clicked,this,&Dialog::start_forecast_timer);
+    connect(ui->clear_button,&QPushButton::clicked,this,&Dialog::clear_chart);
 
     temp_hum_chart = new QChart();
+    temp_hum_chart -> setTitle("Temperature and humidity measurments");
     temp_hum_chart -> legend() -> setVisible(true);
     temp_hum_chart -> legend() -> setAlignment(Qt::AlignBottom);
 
@@ -156,10 +159,16 @@ void Dialog ::temperature_humidity_read()
         float avg_t = sum_t/t;
         float avg_h = sum_h/t;
 
+        if(temperature > 33) // Adjust this when testing a sensor
+        {
+            QMessageBox::warning(this,"Forecast","Very hot weather stay inside or wear suncream");
+        }
+
         ui-> label1->setText(QString::number(humidity));
         ui-> label2->setText(QString::number(temperature));
         ui-> average_temp_label -> setText(QString::number(avg_t));
         ui-> average_humidity_label -> setText(QString::number(avg_h));
+        ui-> time_elapsed_label -> setText(QString::number(t));
         temp -> append(t,temperature);
         hum  -> append(t,humidity);
         chartView -> update();
@@ -196,6 +205,7 @@ void Dialog::forecast_read()
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its dark outside.."<<std::endl;
         ui->label_6->setText("Baby its dark outside..");
+        QMessageBox::warning(this,"Forecast","Bring an umbrella");
     }
     else if(light_value < 84 && wat_value == LOW)
     {
@@ -216,6 +226,7 @@ void Dialog::forecast_read()
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its sunny outside.."<<std::endl;
         ui->label_6->setText("Baby its sunny outside..");
+        QMessageBox::warning(this,"Forecast","Bring an umbrella");
     }
     else if(light_value < 164 && wat_value == LOW)
     {
@@ -232,6 +243,7 @@ void Dialog::forecast_read()
         ui->forecast_label->setPixmap(pixmap);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+        QMessageBox::warning(this,"Forecast","Bring an umbrella");
     }
     else
     {
@@ -243,13 +255,25 @@ void Dialog::forecast_read()
     }
 }
 
+void Dialog::clear_chart()
+{
+    QMessageBox::information(this,"Information","Measurments stopped");
+    ui-> time_elapsed_label -> setText("Reset state. ");
+    timer1->stop();
+    temp -> clear();
+    hum -> clear();
+    chartView -> update();
+}
+
 // Functions that start the timers
 void Dialog::start_temperature_humidity_timer()
 {
+    QMessageBox::information(this,"Information","Measurments for temperature and humidity are on");
     timer1->start(1000);
 }
 
 void Dialog::start_forecast_timer()
 {
+    QMessageBox::information(this,"Information","Weather forecast started");
     timer2->start(1000);
 }

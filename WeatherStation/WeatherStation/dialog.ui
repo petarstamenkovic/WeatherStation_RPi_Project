@@ -13,213 +13,325 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="temp_hum_button">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>100</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Temp/Hum</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="light_button">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>140</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Light Detect</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>130</y>
-     <width>111</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Rain detection:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>130</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>null</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>102</x>
-     <y>107</y>
-     <width>93</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Temperature:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label2">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>110</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>null</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>90</y>
-     <width>66</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Humidity:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label1">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>90</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>null</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>86</x>
-     <y>160</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Light detection: </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>160</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>null</string>
-   </property>
-  </widget>
+  <property name="styleSheet">
+   <string notr="true">QDialog
+{
+	border: 2px solid gray;
+	background : rgb(153, 193, 241);
+}</string>
+  </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>210</y>
+     <y>190</y>
      <width>871</width>
      <height>521</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout"/>
   </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>10</y>
-     <width>171</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Average Temperature:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="average_temp_label">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>30</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>null</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>60</y>
-     <width>151</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Average Humidity:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="average_humidity_label">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>80</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>null</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="forecast_label">
    <property name="geometry">
     <rect>
-     <x>1000</x>
-     <y>30</y>
-     <width>151</width>
-     <height>61</height>
+     <x>980</x>
+     <y>10</y>
+     <width>231</width>
+     <height>141</height>
     </rect>
    </property>
    <property name="text">
     <string>current_weather</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="clear_button">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>650</y>
+     <width>131</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 2px solid gray;
+	background : rgb(246, 211, 45);
+}</string>
+   </property>
+   <property name="text">
+    <string>Clear chart</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_3">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>210</y>
+     <width>311</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">Line
+{
+	border: 1px solid gray;
+	background : rgb(51, 209, 122);
+}</string>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_4">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>30</y>
+     <width>371</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">Line
+{
+	border: 1px solid gray;
+	background : rgb(51, 209, 122);
+}</string>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSplitter" name="splitter">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>30</y>
+     <width>221</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <widget class="QPushButton" name="temp_hum_button">
+    <property name="font">
+     <font>
+      <italic>true</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	border: 2px solid gray;
+	background : rgb(246, 211, 45);
+}</string>
+    </property>
+    <property name="text">
+     <string>Temperature and humidity</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="forecast_button">
+    <property name="font">
+     <font>
+      <italic>true</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+	border: 2px solid gray;
+	background : rgb(246, 211, 45);
+}</string>
+    </property>
+    <property name="text">
+     <string>Weather Forecast</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>720</y>
+     <width>169</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Time elapsed:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="time_elapsed_label">
+      <property name="text">
+       <string>null</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>47</y>
+     <width>114</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Humidity:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Temperature:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Rain detection:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Light detection: </string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>227</x>
+     <y>47</y>
+     <width>201</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QLabel" name="label1">
+      <property name="text">
+       <string>null</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label2">
+      <property name="text">
+       <string>null</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>null</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>null</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>250</y>
+     <width>241</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Average Temperature:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="average_temp_label">
+        <property name="text">
+         <string>null</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Average Humidity:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="average_humidity_label">
+        <property name="text">
+         <string>null</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <zorder>line_3</zorder>
+  <zorder>line_4</zorder>
+  <zorder>temp_hum_button</zorder>
+  <zorder>forecast_button</zorder>
+  <zorder>label_3</zorder>
+  <zorder>label_4</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label2</zorder>
+  <zorder>label</zorder>
+  <zorder>label1</zorder>
+  <zorder>label_5</zorder>
+  <zorder>label_6</zorder>
+  <zorder>verticalLayoutWidget</zorder>
+  <zorder>label_7</zorder>
+  <zorder>average_temp_label</zorder>
+  <zorder>label_8</zorder>
+  <zorder>average_humidity_label</zorder>
+  <zorder>forecast_label</zorder>
+  <zorder>clear_button</zorder>
+  <zorder>label_9</zorder>
+  <zorder>time_elapsed_label</zorder>
  </widget>
+ <tabstops>
+  <tabstop>temp_hum_button</tabstop>
+  <tabstop>forecast_button</tabstop>
+  <tabstop>clear_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
