@@ -30,28 +30,24 @@ Dialog::Dialog(QWidget *parent)
     timer1 = new QTimer(this);
     connect(timer1,&QTimer::timeout,this,&Dialog::temperature_humidity_read);
 
-   // timer2 = new QTimer(this);
-    //connect(timer2,&QTimer::timeout,this,&Dialog::rain_detection_read);
-
-    timer3 = new QTimer(this);
-    connect(timer3,&QTimer::timeout,this,&Dialog::light_detection_read);
+    timer2 = new QTimer(this);
+    connect(timer2,&QTimer::timeout,this,&Dialog::forecast_read);
 
     wiringPiSetup();
 
     fd = wiringPiI2CSetup(0x48); // Check the address for my case
     // Connecting the buttons to the timer functions
     connect(ui->temp_hum_button,&QPushButton::clicked,this,&Dialog::start_temperature_humidity_timer);
-    //connect(ui->rain_button,&QPushButton::clicked,this,&Dialog::start_rain_detection_timer);
-    connect(ui->light_button,&QPushButton::clicked,this,&Dialog::start_light_detection_timer);
+    connect(ui->light_button,&QPushButton::clicked,this,&Dialog::start_forecast_timer);
 
-    QChart *temp_hum_chart = new QChart();
-
-        temp_hum_chart -> legend() -> setVisible(true);
-        temp_hum_chart -> legend() -> setAlignment(Qt::AlignBottom);
+    temp_hum_chart = new QChart();
+    temp_hum_chart -> legend() -> setVisible(true);
+    temp_hum_chart -> legend() -> setAlignment(Qt::AlignBottom);
 
         // Temporal axis
     QValueAxis *axisX = new QValueAxis;
         axisX -> setMin(0);
+        axisX -> setMax(100);
         temp_hum_chart -> addAxis(axisX,Qt::AlignBottom);
 
         // Temperature axis
@@ -66,16 +62,21 @@ Dialog::Dialog(QWidget *parent)
         axisYH -> setMax(100);
         temp_hum_chart -> addAxis(axisYH,Qt::AlignRight);
 
-    QLineSeries *temp = new QLineSeries;
-    QLineSeries *hum  = new QLineSeries;
+        temp = new QLineSeries;
+        hum  = new QLineSeries;
         temp_hum_chart -> addSeries(temp);
         temp -> setName("Tempearature");
         temp_hum_chart -> addSeries(hum);
         hum -> setName("Humidity");
-    QChartView *chartView = new QChartView(temp_hum_chart);
+        temp-> attachAxis(axisX);
+        temp-> attachAxis(axisYT);
+        hum-> attachAxis(axisX);
+        hum-> attachAxis(axisYH);
+
+        chartView = new QChartView(temp_hum_chart);
         chartView -> setRenderHint(QPainter::Antialiasing);
 
-    ui -> verticalLayout -> addWidget(chartView);
+        ui -> verticalLayout -> addWidget(chartView);
 }
 
 Dialog::~Dialog()
@@ -149,6 +150,7 @@ void Dialog ::temperature_humidity_read()
         }
 
         t++;
+        // Could these values crash my code? Comment to check it //
         sum_t = sum_t + temperature;
         sum_h = sum_h + humidity;
         float avg_t = sum_t/t;
@@ -160,16 +162,17 @@ void Dialog ::temperature_humidity_read()
         ui-> average_humidity_label -> setText(QString::number(avg_h));
         temp -> append(t,temperature);
         hum  -> append(t,humidity);
+        chartView -> update();
     }
-
-
 
 }
 
-/*void Dialog::rain_detection_read()
+void Dialog::forecast_read()
 {
+
     pinMode(WATER_SENSOR,INPUT);
     int wat_value = digitalRead(WATER_SENSOR);
+    // This if branch is just a testing branch, it should be deleted in the final version
     if(wat_value == HIGH)
     {
         //std::cout << "Water detected" << std::endl;
@@ -180,32 +183,8 @@ void Dialog ::temperature_humidity_read()
         //std::cout << "No water detected" << std::endl;
         ui-> label_4->setText("No rain is detected");
     }
-}
-*/
-void Dialog::light_detection_read()
-{
-
-    pinMode(WATER_SENSOR,INPUT);
-    int wat_value = digitalRead(WATER_SENSOR);
-    if(wat_value == HIGH)
-    {
-        //std::cout << "Water detected" << std::endl;
-        ui-> label_4->setText("Rain is detected");
-    }
-    else
-    {
-        //std::cout << "No water detected" << std::endl;
-        ui-> label_4->setText("No rain is detected");
-    }
-    /*
-    pinMode(PHOTORESISTOR_PIN,INPUT);
-    int analog_light_value = analogRead(PHOTORESISTOR_PIN);
-    std::cout <<"Anlog value is : " << analog_light_value << std::endl;
-    */
 
     // This part is done by using a YL-40 board that does AD conversion
-    // Declare the diodes as outputs and turn them off initially (these are on the DVK board tho)
-
     light_value = wiringPiI2CReadReg8(fd,0x00);
 
     if(light_value < 84 && wat_value == HIGH)
@@ -270,12 +249,7 @@ void Dialog::start_temperature_humidity_timer()
     timer1->start(1000);
 }
 
-/*void Dialog::start_rain_detection_timer()
+void Dialog::start_forecast_timer()
 {
-    timer2->start(2000);
-}
-*/
-void Dialog::start_light_detection_timer()
-{
-    timer3->start(1000);
+    timer2->start(1000);
 }

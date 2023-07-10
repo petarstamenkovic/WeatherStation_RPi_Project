@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>80</y>
+     <y>100</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -26,24 +26,11 @@
     <string>Temp/Hum</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="rain_button">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>120</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Rain Detect</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="light_button">
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>160</y>
+     <y>140</y>
      <width>89</width>
      <height>25</height>
     </rect>
