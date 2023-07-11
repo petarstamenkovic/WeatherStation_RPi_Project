@@ -34,10 +34,10 @@
   <widget class="QLabel" name="forecast_label">
    <property name="geometry">
     <rect>
-     <x>980</x>
+     <x>900</x>
      <y>10</y>
-     <width>231</width>
-     <height>141</height>
+     <width>301</width>
+     <height>161</height>
     </rect>
    </property>
    <property name="text">
@@ -151,7 +151,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -177,7 +177,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -217,7 +217,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>227</x>
@@ -257,7 +257,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>930</x>
@@ -307,25 +307,14 @@
   </widget>
   <zorder>line_3</zorder>
   <zorder>line_4</zorder>
-  <zorder>temp_hum_button</zorder>
-  <zorder>forecast_button</zorder>
-  <zorder>label_3</zorder>
-  <zorder>label_4</zorder>
-  <zorder>label_2</zorder>
-  <zorder>label2</zorder>
-  <zorder>label</zorder>
-  <zorder>label1</zorder>
-  <zorder>label_5</zorder>
-  <zorder>label_6</zorder>
+  <zorder>splitter</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
   <zorder>verticalLayoutWidget</zorder>
-  <zorder>label_7</zorder>
-  <zorder>average_temp_label</zorder>
-  <zorder>label_8</zorder>
-  <zorder>average_humidity_label</zorder>
   <zorder>forecast_label</zorder>
   <zorder>clear_button</zorder>
-  <zorder>label_9</zorder>
-  <zorder>time_elapsed_label</zorder>
  </widget>
  <tabstops>
   <tabstop>temp_hum_button</tabstop>

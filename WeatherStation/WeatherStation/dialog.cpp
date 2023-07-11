@@ -36,6 +36,7 @@ Dialog::Dialog(QWidget *parent)
 
     wiringPiSetup();
 
+
     fd = wiringPiI2CSetup(0x48); // Check the address for my case
     // Connecting the buttons to the timer functions
     connect(ui->temp_hum_button,&QPushButton::clicked,this,&Dialog::start_temperature_humidity_timer);
@@ -195,6 +196,7 @@ void Dialog::forecast_read()
 
     // This part is done by using a YL-40 board that does AD conversion
     light_value = wiringPiI2CReadReg8(fd,0x00);
+    ui -> label_6 -> setText(QString::number(light_value));
 
     if(light_value < 84 && wat_value == HIGH)
     {
@@ -257,23 +259,26 @@ void Dialog::forecast_read()
 
 void Dialog::clear_chart()
 {
-    QMessageBox::information(this,"Information","Measurments stopped");
+    t = 0;
+    ui->average_humidity_label->setText("Reset state. ");
+    ui->average_temp_label->setText("Reset state. ");
     ui-> time_elapsed_label -> setText("Reset state. ");
     timer1->stop();
     temp -> clear();
     hum -> clear();
     chartView -> update();
+    QMessageBox::information(this,"Information","Measurments stopped");
 }
 
 // Functions that start the timers
 void Dialog::start_temperature_humidity_timer()
 {
-    QMessageBox::information(this,"Information","Measurments for temperature and humidity are on");
     timer1->start(1000);
+    QMessageBox::information(this,"Information","Measurments for temperature and humidity are on");
 }
 
 void Dialog::start_forecast_timer()
 {
+    timer2->start(1500);
     QMessageBox::information(this,"Information","Weather forecast started");
-    timer2->start(1000);
 }
