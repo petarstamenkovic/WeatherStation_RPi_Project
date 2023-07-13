@@ -29,6 +29,7 @@ private:
     void start_temperature_humidity_timer();
     void start_forecast_timer();
     void clear_chart();
+    void clear_forecast();
     QChart *temp_hum_chart;
     QLineSeries *temp;
     QLineSeries *hum;
