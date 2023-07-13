@@ -47,10 +47,10 @@
   <widget class="QPushButton" name="clear_button">
    <property name="geometry">
     <rect>
-     <x>890</x>
-     <y>650</y>
-     <width>131</width>
-     <height>61</height>
+     <x>900</x>
+     <y>440</y>
+     <width>311</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -61,7 +61,8 @@
 }</string>
    </property>
    <property name="text">
-    <string>Clear chart</string>
+    <string>Reset Temperature and 
+Humidity measurments</string>
    </property>
   </widget>
   <widget class="Line" name="line_3">
@@ -305,6 +306,26 @@
     </item>
    </layout>
   </widget>
+  <widget class="QPushButton" name="clear_forecast_button">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>540</y>
+     <width>311</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+	border: 2px solid gray;
+	background : rgb(246, 211, 45);
+}</string>
+   </property>
+   <property name="text">
+    <string>Reset forecast reading</string>
+   </property>
+  </widget>
   <zorder>line_3</zorder>
   <zorder>line_4</zorder>
   <zorder>splitter</zorder>
@@ -315,6 +336,7 @@
   <zorder>verticalLayoutWidget</zorder>
   <zorder>forecast_label</zorder>
   <zorder>clear_button</zorder>
+  <zorder>clear_forecast_button</zorder>
  </widget>
  <tabstops>
   <tabstop>temp_hum_button</tabstop>

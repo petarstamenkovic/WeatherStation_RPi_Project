@@ -42,6 +42,7 @@ Dialog::Dialog(QWidget *parent)
     connect(ui->temp_hum_button,&QPushButton::clicked,this,&Dialog::start_temperature_humidity_timer);
     connect(ui->forecast_button,&QPushButton::clicked,this,&Dialog::start_forecast_timer);
     connect(ui->clear_button,&QPushButton::clicked,this,&Dialog::clear_chart);
+    connect(ui->clear_forecast_button,&QPushButton::clicked,this,&Dialog::clear_forecast);
 
     temp_hum_chart = new QChart();
     temp_hum_chart -> setTitle("Temperature and humidity measurments");
@@ -267,6 +268,15 @@ void Dialog::clear_chart()
     temp -> clear();
     hum -> clear();
     chartView -> update();
+    QMessageBox::information(this,"Information","Measurments stopped");
+}
+
+void Dialog::clear_forecast()
+{
+    timer2->stop();
+    ui->label_4->setText("Reset state.");
+    ui->label_6->setText("Reset state.");
+    ui->forecast_label->setText("Reset state.");
     QMessageBox::information(this,"Information","Measurments stopped");
 }
 
