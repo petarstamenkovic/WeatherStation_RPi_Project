@@ -10,7 +10,7 @@
 
 
 // Decleration of Pins for used sensors
-#define DHTPIN 7
+#define DHTPIN 4
 #define WATER_SENSOR 2
 #define PHOTORESISTOR_PIN 0
 #define MAXT 85 // More than enough, we leave additional space for eventual checking
@@ -102,7 +102,7 @@ void Dialog ::temperature_humidity_read()
     // Pull pin down for 18ms (Due to specification)
     pinMode(DHTPIN,OUTPUT);
     digitalWrite(DHTPIN,LOW);
-    delay(18);
+    delay(1000);      // THIS CHANGED
     //Prepare to read after 18ms
     digitalWrite(DHTPIN,HIGH);
     delayMicroseconds(40);
@@ -154,7 +154,7 @@ void Dialog ::temperature_humidity_read()
             temperature = -temperature;
         }
 
-        t++;
+        t = t + 1.5;
         // Could these values crash my code? Comment to check it //
         sum_t = sum_t + temperature;
         sum_h = sum_h + humidity;
@@ -201,9 +201,10 @@ void Dialog::forecast_read()
 
     if(light_value < 84 && wat_value == HIGH)
     {
-        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_moon.png";
-        QPixmap pixmap(imagePath);
-        ui->forecast_label->setPixmap(pixmap);
+        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_moon.png";
+        //QPixmap pixmap(imagePath);
+        QPixmap rainy_sunny(":/new/prefix1/Icons/rainy_sunny.png");
+        ui->forecast_label->setPixmap(rainy_sunny);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its dark outside.."<<std::endl;
@@ -212,9 +213,10 @@ void Dialog::forecast_read()
     }
     else if(light_value < 84 && wat_value == LOW)
     {
-        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_moon.png";
-        QPixmap pixmap(imagePath);
-        ui->forecast_label->setPixmap(pixmap);
+        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_moon.png";
+        //QPixmap pixmap(imagePath);
+        QPixmap clear_sunny(":/new/prefix1/Icons/clear_sunny.png");
+        ui->forecast_label->setPixmap(clear_sunny);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its cloudy outside.."<<std::endl;
@@ -222,9 +224,10 @@ void Dialog::forecast_read()
     }
     else if(light_value < 164 && wat_value == HIGH)
     {
-        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_cloudy.png";
-        QPixmap pixmap(imagePath);
-        ui->forecast_label->setPixmap(pixmap);
+        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_cloudy.png";
+        //QPixmap pixmap(imagePath);
+        QPixmap rainy_cloudy(":/new/prefix1/Icons/rainy_cloudy.png");
+        ui->forecast_label->setPixmap(rainy_cloudy);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its sunny outside.."<<std::endl;
@@ -233,26 +236,28 @@ void Dialog::forecast_read()
     }
     else if(light_value < 164 && wat_value == LOW)
     {
-        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_cloudy.png";
-        QPixmap pixmap(imagePath);
-        ui->forecast_label->setPixmap(pixmap);
+        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_cloudy.png";
+        //QPixmap pixmap(imagePath);
+        QPixmap clear_cloudy(":/new/prefix1/Icons/clear_cloudy.png");
+        ui->forecast_label->setPixmap(clear_cloudy);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
     }
     else if(light_value < 200 && wat_value == HIGH)
     {
-        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_sunny.png";
-        QPixmap pixmap(imagePath);
-        ui->forecast_label->setPixmap(pixmap);
+        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_sunny.png";
+        //QPixmap pixmap(imagePath);
+        QPixmap rainy_moon(":/new/prefix1/Icons/rainy_moon.png");
+        ui->forecast_label->setPixmap(rainy_moon);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         QMessageBox::warning(this,"Forecast","Bring an umbrella");
     }
     else
     {
-        QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_sunny.png";
-        QPixmap pixmap(imagePath);
-        ui->forecast_label->setPixmap(pixmap);
+        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_sunny.png";
+        QPixmap clear_moon(":/new/prefix1/Icons/clear_moon.png");
+        ui->forecast_label->setPixmap(clear_moon);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
     }
@@ -261,6 +266,8 @@ void Dialog::forecast_read()
 void Dialog::clear_chart()
 {
     t = 0;
+    sum_h = 0;
+    sum_t = 0;
     ui->average_humidity_label->setText("Reset state. ");
     ui->average_temp_label->setText("Reset state. ");
     ui-> time_elapsed_label -> setText("Reset state. ");
@@ -283,7 +290,7 @@ void Dialog::clear_forecast()
 // Functions that start the timers
 void Dialog::start_temperature_humidity_timer()
 {
-    timer1->start(1000);
+    timer1->start(1500);
     QMessageBox::information(this,"Information","Measurments for temperature and humidity are on");
 }
 

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>Icons/clear_cloudy.png</file>
+        <file>Icons/clear_moon.png</file>
+        <file>Icons/clear_sunny.png</file>
+        <file>Icons/rainy_cloudy.png</file>
+        <file>Icons/rainy_moon.png</file>
+        <file>Icons/rainy_sunny.png</file>
+    </qresource>
+</RCC>
