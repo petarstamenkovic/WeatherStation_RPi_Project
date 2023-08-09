@@ -18,8 +18,6 @@
 int dht_dat[5] = {0,0,0,0,0};
 int fd,light_value;
 float t = 0;   // variable for average values and qtcharts series
-float sum_t = 0; // variable for summary for temperature
-float sum_h = 0; // variable for summary for humidity
 // Initialzing the Dialog - constructor
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
@@ -91,6 +89,12 @@ Dialog::~Dialog()
 
 void Dialog ::temperature_humidity_read()
 {
+    t = t + 1;
+    ui-> time_elapsed_label -> setText(QString::number(t));
+    chartView -> chart() -> update();
+
+    //chartView -> update();
+
     uint8_t last_state = HIGH;
     uint8_t counter = 0;
     uint8_t j = 0;
@@ -102,7 +106,7 @@ void Dialog ::temperature_humidity_read()
     // Pull pin down for 18ms (Due to specification)
     pinMode(DHTPIN,OUTPUT);
     digitalWrite(DHTPIN,LOW);
-    delay(1000);      // THIS CHANGED
+    delay(18);      // THIS CHANGED
     //Prepare to read after 18ms
     digitalWrite(DHTPIN,HIGH);
     delayMicroseconds(40);
@@ -138,13 +142,13 @@ void Dialog ::temperature_humidity_read()
     if((j>=40) && (dht_dat[4] = (dht_dat[0] + dht_dat[1] + dht_dat[2] + dht_dat[3]) & 0xFF))
     {
         // Read Humidity
-        float humidity = (float)((dht_dat[0] << 8) + dht_dat[1]) / 10;
+        int humidity = (int)((dht_dat[0] << 8) + dht_dat[1]) / 10.0;
         if(humidity > 100)
         {
             humidity = dht_dat[0];
         }
         // Read Temperature
-        float temperature = (float)(((dht_dat[2] & 0x7F) << 8) + dht_dat[3]) / 10;
+        float temperature = (float)(dht_dat[2] + dht_dat[3]/10.0);
         if(temperature > 125)
         {
             temperature = dht_dat[2];
@@ -154,26 +158,14 @@ void Dialog ::temperature_humidity_read()
             temperature = -temperature;
         }
 
-        t = t + 1.5;
-        // Could these values crash my code? Comment to check it //
-        sum_t = sum_t + temperature;
-        sum_h = sum_h + humidity;
-        float avg_t = sum_t/t;
-        float avg_h = sum_h/t;
-
-        if(temperature > 33) // Adjust this when testing a sensor
-        {
-            QMessageBox::warning(this,"Forecast","Very hot weather stay inside or wear suncream");
-        }
+        temp -> append(t,temperature);
+        hum  -> append(t,humidity);
+        chartView -> chart() -> update();
+        printf("Temperatura je %f, a vlaznost je %d%% \n" ,temperature,humidity);
 
         ui-> label1->setText(QString::number(humidity));
         ui-> label2->setText(QString::number(temperature));
-        ui-> average_temp_label -> setText(QString::number(avg_t));
-        ui-> average_humidity_label -> setText(QString::number(avg_h));
-        ui-> time_elapsed_label -> setText(QString::number(t));
-        temp -> append(t,temperature);
-        hum  -> append(t,humidity);
-        chartView -> update();
+
     }
 
 }
@@ -187,7 +179,7 @@ void Dialog::forecast_read()
     if(wat_value == HIGH)
     {
         //std::cout << "Water detected" << std::endl;
-        ui-> label_4->setText("Rain is detected");
+        ui-> label_4->setText("It's raining men");
     }
     else
     {
@@ -199,7 +191,7 @@ void Dialog::forecast_read()
     light_value = wiringPiI2CReadReg8(fd,0x00);
     ui -> label_6 -> setText(QString::number(light_value));
 
-    if(light_value < 84 && wat_value == HIGH)
+    if(light_value < 150 && wat_value == HIGH)
     {
         //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_moon.png";
         //QPixmap pixmap(imagePath);
@@ -208,68 +200,53 @@ void Dialog::forecast_read()
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
         std::cout<<"Baby its dark outside.."<<std::endl;
-        ui->label_6->setText("Baby its dark outside..");
-        QMessageBox::warning(this,"Forecast","Bring an umbrella");
+        ui->label_6->setText("Baby its sunny outside with some rain..");
     }
-    else if(light_value < 84 && wat_value == LOW)
+    else if(light_value < 150 && wat_value == LOW)
     {
-        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_moon.png";
-        //QPixmap pixmap(imagePath);
         QPixmap clear_sunny(":/new/prefix1/Icons/clear_sunny.png");
         ui->forecast_label->setPixmap(clear_sunny);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
-        std::cout<<"Baby its cloudy outside.."<<std::endl;
-        ui->label_6->setText("Baby its cloudy outside..");
+        ui->label_6->setText("Baby its sunny outside..");
     }
-    else if(light_value < 164 && wat_value == HIGH)
+    else if(light_value < 225 && wat_value == HIGH)
     {
-        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_cloudy.png";
-        //QPixmap pixmap(imagePath);
         QPixmap rainy_cloudy(":/new/prefix1/Icons/rainy_cloudy.png");
         ui->forecast_label->setPixmap(rainy_cloudy);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
-        std::cout<<"Baby its sunny outside.."<<std::endl;
-        ui->label_6->setText("Baby its sunny outside..");
-        QMessageBox::warning(this,"Forecast","Bring an umbrella");
+        ui->label_6->setText("Baby its cloudy with some rain outside..");
     }
-    else if(light_value < 164 && wat_value == LOW)
+    else if(light_value < 225 && wat_value == LOW)
     {
-        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_cloudy.png";
-        //QPixmap pixmap(imagePath);
         QPixmap clear_cloudy(":/new/prefix1/Icons/clear_cloudy.png");
         ui->forecast_label->setPixmap(clear_cloudy);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+        ui->label_6->setText("Baby its cloudy outside..");
     }
-    else if(light_value < 200 && wat_value == HIGH)
+    else if(light_value > 240 && wat_value == HIGH)
     {
-        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/rainy_sunny.png";
-        //QPixmap pixmap(imagePath);
         QPixmap rainy_moon(":/new/prefix1/Icons/rainy_moon.png");
         ui->forecast_label->setPixmap(rainy_moon);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
-        QMessageBox::warning(this,"Forecast","Bring an umbrella");
+        ui->label_6->setText("Baby its dark with some rain outside..");
     }
     else
     {
-        //QString imagePath = QDir::homePath() + "/Desktop/RaspberryPiProject/Icons/clear_sunny.png";
         QPixmap clear_moon(":/new/prefix1/Icons/clear_moon.png");
         ui->forecast_label->setPixmap(clear_moon);
         ui->forecast_label->setScaledContents(true);
         ui->forecast_label->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+        ui->label_6->setText("Baby its dark outside..");
     }
 }
 
 void Dialog::clear_chart()
 {
     t = 0;
-    sum_h = 0;
-    sum_t = 0;
-    ui->average_humidity_label->setText("Reset state. ");
-    ui->average_temp_label->setText("Reset state. ");
     ui-> time_elapsed_label -> setText("Reset state. ");
     timer1->stop();
     temp -> clear();
@@ -290,12 +267,12 @@ void Dialog::clear_forecast()
 // Functions that start the timers
 void Dialog::start_temperature_humidity_timer()
 {
-    timer1->start(1500);
+    timer1->start(1000);
     QMessageBox::information(this,"Information","Measurments for temperature and humidity are on");
 }
 
 void Dialog::start_forecast_timer()
 {
-    timer2->start(1500);
+    timer2->start(1000);
     QMessageBox::information(this,"Information","Weather forecast started");
 }
